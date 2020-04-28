@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from 'src/app/_services/auth.service';
 import { UserService } from 'src/app/_services/user.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { PathLocationStrategy } from '@angular/common';
 
 @Component({
   selector: 'app-photo-editor',
@@ -60,10 +61,15 @@ export class PhotoEditorComponent implements OnInit {
           url: res.url,
           dateAdded: res.dateAdded,
           description: res.description,
-          isMain: res.isMain,
+          isMain: res.isMain
         };
 
         this.photos.push(photo);
+        if(photo.isMain){
+          this.authService.changeMemberPhoto(photo.url);
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+        }
       }
     };
   }
